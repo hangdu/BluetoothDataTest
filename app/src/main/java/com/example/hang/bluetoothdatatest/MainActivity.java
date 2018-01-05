@@ -118,12 +118,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         public void onReceive(Context context, Intent intent) {
             String text = intent.getStringExtra("theMessage");
             byte[] bytes = intent.getByteArrayExtra("MessageByteArray");
-            messages.append(text + "\n");
+            //messages.append(text + "\n");
             for (byte b : bytes) {
                 int v2 = b & 0xFF; // v2 is 200 (0x000000C8)
                 messages.append(v2 + " ");
             }
-            messages.append("\n");
+            //messages.append("\n");
             incomingMessage.setText(messages.toString());
         }
     };
