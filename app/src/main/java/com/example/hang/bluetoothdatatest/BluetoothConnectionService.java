@@ -36,9 +36,21 @@ public class BluetoothConnectionService {
     private final BluetoothAdapter mBluetoothAdapter;
     Context mContext;
 
-    public BluetoothConnectionService(Context context) {
+    private BluetoothConnectionService(Context context) {
         mContext = context;
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    }
+
+    private static BluetoothConnectionService instance;
+    public static BluetoothConnectionService getInstance(Context context) {
+        if (instance == null) {
+            instance = new BluetoothConnectionService(context);
+        }
+        return instance;
+    }
+
+    public static BluetoothConnectionService getInstance() {
+        return instance;
     }
 
     /**
@@ -204,22 +216,29 @@ public class BluetoothConnectionService {
         }
 
         public void run() {
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[10];
             int bytes;
+            List<Byte> list = new ArrayList<>();
+
             while (true) {
                 //Read from inputStream
                 try {
                     bytes = mmInStream.read(buffer);
-                    String incomingMessage = new String(buffer, 0, bytes);
-                    Log.d(TAG, "InputStream: " + incomingMessage);
-                    byte[] res = new byte[bytes];
                     for (int i = 0; i < bytes; i++) {
-                        res[i] = buffer[i];
+                        list.add(buffer[i]);
                     }
-                    Intent incomingMessageIntent = new Intent("incomingMessage");
-                    incomingMessageIntent.putExtra("theMessage", incomingMessage);
-                    incomingMessageIntent.putExtra("MessageByteArray", res);
-                    LocalBroadcastManager.getInstance(mContext).sendBroadcast(incomingMessageIntent);
+                    if ((buffer[bytes-1] & 0xFF) == 0xFF) {
+                        //end of this packet
+                        int size = list.size();
+                        byte[] res = new byte[size];
+                        for (int i = 0; i < list.size(); i++) {
+                            res[i] = list.get(i);
+                        }
+                        Intent incomingMessageIntent = new Intent("incomingMessage");
+                        incomingMessageIntent.putExtra("MessageByteArray", res);
+                        LocalBroadcastManager.getInstance(mContext).sendBroadcast(incomingMessageIntent);
+                        list.clear();
+                    }
                 } catch (IOException e) {
                     Log.e(TAG, "write : Error reading inputStream.." + e.getMessage());
                     break;

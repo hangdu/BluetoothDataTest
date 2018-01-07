@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     Button btnSend2;
     TextView incomingMessage;
     EditText etSend;
+    Button btnScanMode;
 
     public ArrayList<BluetoothDevice> mBTDevices;
     BluetoothDevice mBTDevice;
@@ -56,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         btnSend =  (Button) findViewById(R.id.btnSend);
         btnSend2 =  (Button) findViewById(R.id.btnSend2);
         btnStartConnection =  (Button) findViewById(R.id.btnStartConnection);
+        btnScanMode = (Button) findViewById(R.id.btnScanMode);
         etSend = (EditText) findViewById(R.id.editText);
         incomingMessage = (TextView) findViewById(R.id.incomingMessage);
         messages = new StringBuilder();
@@ -99,7 +102,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 byte[] bytes = "2".getBytes(Charset.defaultCharset());
                 mBluetoothConnection.write(bytes);
                 etSend.setText("");
-                messages = new StringBuilder();
+            //    messages = new StringBuilder();
+            }
+        });
+
+        btnScanMode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, ScanModeActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -116,7 +127,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String text = intent.getStringExtra("theMessage");
+        //    String text = intent.getStringExtra("theMessage");
+            messages = new StringBuilder();
             byte[] bytes = intent.getByteArrayExtra("MessageByteArray");
             //messages.append(text + "\n");
             for (byte b : bytes) {
@@ -203,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 //case1: bonded already
                 if (mDevice.getBondState() == BluetoothDevice.BOND_BONDED) {
                     Log.d(TAG, "mBroadcastReceiver4: BOND_BONDED");
-
+                    Toast.makeText(MainActivity.this, "mBroadcastReceiver4: BOND_BONDED",Toast.LENGTH_SHORT).show();
                     mBTDevice = mDevice;
                 } else if (mDevice.getBondState() == BluetoothDevice.BOND_BONDING) {
                     Log.d(TAG, "mBroadcastReceiver4: BOND_BONDING");
@@ -213,8 +225,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         }
     };
-
-
 
     public void enableDisableBluetooth() {
         if (mBluetoothAdapter == null) {
@@ -237,8 +247,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     public void btnEnableDisable_Discoverable(View view) {
         Log.d(TAG, "btnEnableDisable_Discoverable: Making device discoverable for 300 seconds");
-
-
         Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
         discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
         startActivity(discoverableIntent);
@@ -295,14 +303,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR2) {
             Log.d(TAG, "Trying to pair with " + deviceName);
-            boolean flag = mBTDevices.get(i).createBond();
-            if (flag) {
-                Log.d(TAG, "Bonding begin!");
-            } else {
-                Log.d(TAG, "Some immediate error happen");
-            }
             mBTDevice = mBTDevices.get(i);
-            mBluetoothConnection = new BluetoothConnectionService(MainActivity.this);
+            if (mBluetoothAdapter.getBondedDevices().contains(mBTDevice)) {
+                Toast.makeText(this, "This device is already paired",Toast.LENGTH_SHORT).show();
+            } else {
+                boolean flag = mBTDevices.get(i).createBond();
+                if (flag) {
+                    Log.d(TAG, "Bonding begin!");
+                } else {
+                    Log.d(TAG, "Some immediate error happen");
+                }
+            }
+            mBluetoothConnection = BluetoothConnectionService.getInstance(MainActivity.this);
         }
     }
 
@@ -314,6 +326,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         unregisterReceiver(mBroadcastReceiver2);
         unregisterReceiver(mBroadcastReceiver3);
         unregisterReceiver(mBroadcastReceiver4);
+        unregisterReceiver(mReceiver);
     }
 
 }
