@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -204,6 +205,7 @@ public class BluetoothConnectionService {
 
             //dismiss the progressdialog when connection is established
             mProgressDialog.dismiss();
+            Toast.makeText(mContext, "It is connected", Toast.LENGTH_LONG).show();
 
             try {
                 tmpIn = mmSocket.getInputStream();

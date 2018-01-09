@@ -23,7 +23,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ScanModeActivity"></activity>
+        <activity android:name=".ScanModeActivity" />
+        <activity android:name=".SearchModeActiviry"></activity>
     </application>
 
 </manifest>

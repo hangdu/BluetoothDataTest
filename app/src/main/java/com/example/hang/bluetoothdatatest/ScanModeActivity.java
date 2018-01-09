@@ -25,12 +25,8 @@ public class ScanModeActivity extends AppCompatActivity {
     protected void onDestroy() {
         byte[] bytes = "4".getBytes(Charset.defaultCharset());
         mBluetoothConnectionService.write(bytes);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
         super.onDestroy();
-        try {
-            unregisterReceiver(mReceiver);
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override

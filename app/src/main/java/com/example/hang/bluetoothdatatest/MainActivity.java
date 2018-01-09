@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     TextView incomingMessage;
     EditText etSend;
     Button btnScanMode;
+    Button btnSearchMode;
 
     private ArrayList<BluetoothDevice> mBTDevices;
     BluetoothDevice mBTDevice;
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         btnSend2 =  (Button) findViewById(R.id.btnSend2);
         btnStartConnection =  (Button) findViewById(R.id.btnStartConnection);
         btnScanMode = (Button) findViewById(R.id.btnScanMode);
+        btnSearchMode = (Button) findViewById(R.id.btnSearchMode);
         etSend = (EditText) findViewById(R.id.editText);
         incomingMessage = (TextView) findViewById(R.id.incomingMessage);
         messages = new StringBuilder();
@@ -111,6 +113,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, ScanModeActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btnSearchMode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, SearchModeActiviry.class);
                 startActivity(intent);
             }
         });
@@ -324,7 +334,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         unregisterReceiver(mBroadcastReceiver2);
         unregisterReceiver(mBroadcastReceiver3);
         unregisterReceiver(mBroadcastReceiver4);
-        unregisterReceiver(mReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
     }
 
 }
