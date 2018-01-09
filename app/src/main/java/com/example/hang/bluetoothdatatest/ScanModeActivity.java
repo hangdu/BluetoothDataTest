@@ -31,8 +31,6 @@ public class ScanModeActivity extends AppCompatActivity {
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
-
-
     }
 
     @Override

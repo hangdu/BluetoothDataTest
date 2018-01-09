@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -22,11 +23,9 @@ import android.widget.Toast;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
-
     private static final String TAG = "MainActivity";
 
     // If you are connecting to a Bluetooth serial board then try using the well-known SPP UUID 00001101-0000-1000-8000-00805F9B34FB.
@@ -41,17 +40,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     EditText etSend;
     Button btnScanMode;
 
-    public ArrayList<BluetoothDevice> mBTDevices;
+    private ArrayList<BluetoothDevice> mBTDevices;
     BluetoothDevice mBTDevice;
-    public DeviceListAdapter mDeviceListAdapter;
+    ArrayAdapter<BluetoothDevice> adapter;
     ListView lvNewDevices;
     StringBuilder messages;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mBTDevices = new ArrayList<>();
+        adapter = new DeviceAdapter(this, mBTDevices);
 
         Button btnONOFF = (Button) findViewById(R.id.btnONOFF);
         btnDiscoverable = (Button) findViewById(R.id.btnDiscoverable_on_off);
@@ -66,6 +65,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("incomingMessage"));
 
         lvNewDevices = (ListView) findViewById(R.id.lvNewDevices);
+        lvNewDevices.setAdapter(adapter);
+
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
@@ -197,9 +198,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             final String action = intent.getAction();
             if (action.equals(BluetoothDevice.ACTION_FOUND)) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                mBTDevices.add(device);
-                mDeviceListAdapter = new DeviceListAdapter(MainActivity.this, mBTDevices);
-                lvNewDevices.setAdapter(mDeviceListAdapter);
+                adapter.add(device);
+                Log.d(TAG, "adapter add device name" + device.getName());
             }
         }
     };
@@ -257,14 +257,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     public void btn_Discover(View view) {
         Log.d(TAG, "btnDiscover: Looking for unpaired devices.");
+        adapter.clear();
         if (mBluetoothAdapter.isDiscovering()) {
             mBluetoothAdapter.cancelDiscovery();
             Log.d(TAG, "btnDiscover: Canceling discovery");
-
             checkBTPermissions();
-
             mBluetoothAdapter.startDiscovery();
-
         } else {
             checkBTPermissions();
             mBluetoothAdapter.startDiscovery();
