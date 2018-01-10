@@ -16,9 +16,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class SearchModeActiviry extends AppCompatActivity {
     BluetoothConnectionService bluetoothConnectionService;
@@ -28,6 +34,12 @@ public class SearchModeActiviry extends AppCompatActivity {
     private TextView textView;
     private Handler handler;
 //    private boolean sendAndreceiveData = false;
+    private ListView listview_label;
+    private List<Integer> tempRSSIlist;
+    private PositionAdapter adapter;
+    private ArrayList<Position> positionList;
+    Set<String> labels;
+    String curLabel = null;
 
     @Override
     protected void onDestroy() {
@@ -47,6 +59,9 @@ public class SearchModeActiviry extends AppCompatActivity {
             }
             textView.setText(messages.toString());
             Log.d(TAG, "get RSSI = " + messages.toString());
+            if ((bytes[0] & 0xFF) == 0x01) {
+                tempRSSIlist.add(bytes[1] & 0xFF);
+            }
         }
     };
 
@@ -74,10 +89,17 @@ public class SearchModeActiviry extends AppCompatActivity {
             }
         };
 
+        tempRSSIlist = new ArrayList<>();
+        positionList = new ArrayList<>();
+        labels = new HashSet<>();
+        adapter = new PositionAdapter(this, positionList);
+
         bluetoothConnectionService = BluetoothConnectionService.getInstance();
         btn_addLabel = (Button) findViewById(R.id.btn_addLabel);
         btn_stop = (Button) findViewById(R.id.btn_stop);
         textView = (TextView) findViewById(R.id.textView);
+        listview_label = (ListView) findViewById(R.id.lv_label);
+        listview_label.setAdapter(adapter);
 
         final View view = getLayoutInflater().inflate(R.layout.dialog_add_label, null);
         final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
@@ -87,14 +109,20 @@ public class SearchModeActiviry extends AppCompatActivity {
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                String label = et_addLabel.getText().toString();
-                Log.d(TAG, "A new label is added as " + label);
+                curLabel = et_addLabel.getText().toString();
+                et_addLabel.setText("");
+                if (labels.contains(curLabel)) {
+                    Toast.makeText(SearchModeActiviry.this, "This label is already included!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Log.d(TAG, "A new label is added as " + curLabel);
 //                sendAndreceiveData = true;
                 //sent command 2 every 4 second.
-                Message msg = Message.obtain();
-                msg.what = 1;
-                handler.sendMessage(msg);
-
+//                Message msg = Message.obtain();
+//                msg.what = 1;
+//                handler.sendMessage(msg);
+                handler.sendEmptyMessage(1);
             }
         });
 
@@ -116,8 +144,26 @@ public class SearchModeActiviry extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 //                sendAndreceiveData = false;
+//                Log.d(TAG, "Stop button is clicked");
                 handler.removeMessages(1);
+                double aveRSSI = getAverage();
+                tempRSSIlist.clear();
+                labels.add(curLabel);
+
+                Position pos = new Position(curLabel, aveRSSI);
+                adapter.add(pos);
             }
         });
+    }
+
+    private double getAverage() {
+        if (tempRSSIlist.size() == 0) {
+            return -1;
+        }
+        double sum = 0;
+        for (int i = 0; i < tempRSSIlist.size(); i++) {
+            sum += tempRSSIlist.get(i);
+        }
+        return sum / tempRSSIlist.size();
     }
 }
