@@ -7,6 +7,9 @@ import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
@@ -17,14 +20,13 @@ import java.nio.charset.Charset;
  * Created by hang on 2018/1/6.
  */
 public class ScanModeActivity extends AppCompatActivity {
-
-    BluetoothConnectionService mBluetoothConnectionService;
+    private BluetoothConnectionService mBluetoothConnectionService;
     private TextView incomingMessage;
+    private Handler handler;
 
     @Override
     protected void onDestroy() {
-        byte[] bytes = "4".getBytes(Charset.defaultCharset());
-        mBluetoothConnectionService.write(bytes);
+        handler.removeMessages(1);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
         super.onDestroy();
     }
@@ -36,8 +38,24 @@ public class ScanModeActivity extends AppCompatActivity {
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("incomingMessage"));
         incomingMessage  =(TextView) findViewById(R.id.textView);
         mBluetoothConnectionService = BluetoothConnectionService.getInstance();
-        byte[] bytes = "3".getBytes(Charset.defaultCharset());
-        mBluetoothConnectionService.write(bytes);
+
+        handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message inputMessage) {
+                switch (inputMessage.what) {
+                    case 1:
+                        //send command 2
+                        byte[] bytes = "2".getBytes(Charset.defaultCharset());
+                        mBluetoothConnectionService.write(bytes);
+                        handler.sendEmptyMessageDelayed(1, 4000);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
+        handler.sendEmptyMessage(1);
+
     }
 
 
