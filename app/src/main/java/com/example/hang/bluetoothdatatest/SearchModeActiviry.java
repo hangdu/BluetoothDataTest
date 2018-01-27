@@ -78,7 +78,7 @@ public class SearchModeActiviry extends AppCompatActivity {
                         //send command 2
                         byte[] bytes = "2".getBytes(Charset.defaultCharset());
                         bluetoothConnectionService.write(bytes);
-                        handler.sendEmptyMessageDelayed(1, 4000);
+                        handler.sendEmptyMessageDelayed(1, 3000);
 //                        if (sendAndreceiveData) {
 //                            handler.sendEmptyMessageDelayed(1, 4000);
 //                        }
@@ -147,6 +147,12 @@ public class SearchModeActiviry extends AppCompatActivity {
 //                Log.d(TAG, "Stop button is clicked");
                 handler.removeMessages(1);
                 double aveRSSI = getAverage();
+
+                StringBuilder s = new StringBuilder();
+                for (int i = 0; i < tempRSSIlist.size(); i++) {
+                    s.append(tempRSSIlist.get(i) + ",");
+                }
+                textView.setText(s);
                 tempRSSIlist.clear();
                 labels.add(curLabel);
 

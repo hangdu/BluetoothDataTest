@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 byte[] bytes = etSend.getText().toString().getBytes(Charset.defaultCharset());
                 mBluetoothConnection.write(bytes);
                 etSend.setText("");
-                messages = new StringBuilder();
+            //    messages = new StringBuilder();
             }
         });
 
@@ -138,7 +138,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-        //    String text = intent.getStringExtra("theMessage");
             messages = new StringBuilder();
             byte[] bytes = intent.getByteArrayExtra("MessageByteArray");
             //messages.append(text + "\n");
