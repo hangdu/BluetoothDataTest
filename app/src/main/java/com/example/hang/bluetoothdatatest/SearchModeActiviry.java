@@ -40,6 +40,7 @@ public class SearchModeActiviry extends AppCompatActivity {
     private ArrayList<Position> positionList;
     Set<String> labels;
     String curLabel = null;
+    int count = 0;
 
     @Override
     protected void onDestroy() {
@@ -50,17 +51,38 @@ public class SearchModeActiviry extends AppCompatActivity {
     BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            count++;
             StringBuilder messages = new StringBuilder();
+            messages.append("index = " + count + "\n");
             byte[] bytes = intent.getByteArrayExtra("MessageByteArray");
             //messages.append(text + "\n");
-            for (byte b : bytes) {
-                int v2 = b & 0xFF; // v2 is 200 (0x000000C8)
+            int RSSI = 0;
+            int SNR = 0;
+            for (int i = 0; i < bytes.length; i++) {
+                byte b = bytes[i];
+                int v2;
+                if (i == 1) {
+                    //RSSI
+                    v2 = b & 0xFF;
+                    v2 = (256-v2)*(-1);
+                    RSSI = v2;
+                }  else if (i == 2) {
+                    //SNR
+                    v2 = b & 0xFF;
+                    if (v2 > 127) {
+                        v2 = (256-v2)*(-1);
+                    }
+                    SNR = v2;
+                } else {
+                    v2 = b & 0xFF;
+                }
                 messages.append(v2 + " ");
             }
+
             textView.setText(messages.toString());
             Log.d(TAG, "get RSSI = " + messages.toString());
             if ((bytes[0] & 0xFF) == 0x01) {
-                tempRSSIlist.add(bytes[1] & 0xFF);
+                tempRSSIlist.add(RSSI);
             }
         }
     };
@@ -78,7 +100,7 @@ public class SearchModeActiviry extends AppCompatActivity {
                         //send command 2
                         byte[] bytes = "2".getBytes(Charset.defaultCharset());
                         bluetoothConnectionService.write(bytes);
-                        handler.sendEmptyMessageDelayed(1, 3000);
+                        handler.sendEmptyMessageDelayed(1, 2000);
 //                        if (sendAndreceiveData) {
 //                            handler.sendEmptyMessageDelayed(1, 4000);
 //                        }
@@ -123,6 +145,7 @@ public class SearchModeActiviry extends AppCompatActivity {
 //                msg.what = 1;
 //                handler.sendMessage(msg);
                 handler.sendEmptyMessage(1);
+                count = 0;
             }
         });
 
