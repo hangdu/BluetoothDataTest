@@ -33,9 +33,11 @@ public class SearchModeActiviry extends AppCompatActivity {
     private Button btn_stop;
     private TextView textView;
     private Handler handler;
-//    private boolean sendAndreceiveData = false;
+    private boolean sendAndreceiveData = false;
     private ListView listview_label;
     private List<Integer> tempRSSIlist;
+    private List<Integer> tempSNRlist;
+    private List<Integer> revisedRSSIlist;
     private PositionAdapter adapter;
     private ArrayList<Position> positionList;
     Set<String> labels;
@@ -78,11 +80,19 @@ public class SearchModeActiviry extends AppCompatActivity {
                 }
                 messages.append(v2 + " ");
             }
+            if (sendAndreceiveData) {
+                textView.setText(messages.toString());
+                Log.d(TAG, "get RSSI = " + messages.toString());
+                if ((bytes[0] & 0xFF) == 0x01) {
+                    tempRSSIlist.add(RSSI);
+                    tempSNRlist.add(SNR);
 
-            textView.setText(messages.toString());
-            Log.d(TAG, "get RSSI = " + messages.toString());
-            if ((bytes[0] & 0xFF) == 0x01) {
-                tempRSSIlist.add(RSSI);
+                    if (SNR > 0) {
+                        revisedRSSIlist.add(RSSI);
+                    } else {
+                        revisedRSSIlist.add((int)(RSSI + 0.25 * SNR));
+                    }
+                }
             }
         }
     };
@@ -112,6 +122,8 @@ public class SearchModeActiviry extends AppCompatActivity {
         };
 
         tempRSSIlist = new ArrayList<>();
+        tempSNRlist = new ArrayList<>();
+        revisedRSSIlist = new ArrayList<>();
         positionList = new ArrayList<>();
         labels = new HashSet<>();
         adapter = new PositionAdapter(this, positionList);
@@ -139,7 +151,7 @@ public class SearchModeActiviry extends AppCompatActivity {
                 }
 
                 Log.d(TAG, "A new label is added as " + curLabel);
-//                sendAndreceiveData = true;
+                sendAndreceiveData = true;
                 //sent command 2 every 4 second.
 //                Message msg = Message.obtain();
 //                msg.what = 1;
@@ -166,17 +178,32 @@ public class SearchModeActiviry extends AppCompatActivity {
         btn_stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                sendAndreceiveData = false;
+                sendAndreceiveData = false;
 //                Log.d(TAG, "Stop button is clicked");
                 handler.removeMessages(1);
                 double aveRSSI = getAverage();
 
                 StringBuilder s = new StringBuilder();
+                s.append("RSSI:");
                 for (int i = 0; i < tempRSSIlist.size(); i++) {
                     s.append(tempRSSIlist.get(i) + ",");
                 }
+                s.append("\n");
+                s.append("SNR:");
+                for (int i = 0; i < tempSNRlist.size(); i++) {
+                    s.append(tempSNRlist.get(i) + ",");
+                }
+
+                s.append("\n");
+                s.append("revised RSSI:");
+                for (int i = 0; i < revisedRSSIlist.size(); i++) {
+                    s.append(revisedRSSIlist.get(i) + ",");
+                }
                 textView.setText(s);
                 tempRSSIlist.clear();
+                tempSNRlist.clear();
+                revisedRSSIlist.clear();
+
                 labels.add(curLabel);
 
                 Position pos = new Position(curLabel, aveRSSI);
@@ -186,13 +213,13 @@ public class SearchModeActiviry extends AppCompatActivity {
     }
 
     private double getAverage() {
-        if (tempRSSIlist.size() == 0) {
+        if (revisedRSSIlist.size() == 0) {
             return -1;
         }
         double sum = 0;
-        for (int i = 0; i < tempRSSIlist.size(); i++) {
-            sum += tempRSSIlist.get(i);
+        for (int i = 0; i < revisedRSSIlist.size(); i++) {
+            sum += revisedRSSIlist.get(i);
         }
-        return sum / tempRSSIlist.size();
+        return sum / revisedRSSIlist.size();
     }
 }

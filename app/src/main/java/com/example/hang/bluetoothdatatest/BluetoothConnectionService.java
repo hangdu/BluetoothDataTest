@@ -205,7 +205,7 @@ public class BluetoothConnectionService {
 
             //dismiss the progressdialog when connection is established
             mProgressDialog.dismiss();
-            Toast.makeText(mContext, "It is connected", Toast.LENGTH_LONG).show();
+//            Toast.makeText(mContext, "It is connected", Toast.LENGTH_LONG).show();
 
             try {
                 tmpIn = mmSocket.getInputStream();
