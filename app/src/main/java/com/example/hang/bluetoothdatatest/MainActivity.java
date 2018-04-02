@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     Button btnSend2;
     TextView incomingMessage;
     EditText etSend;
-    Button btnScanMode;
+
     Button btnSearchMode;
 
     private ArrayList<BluetoothDevice> mBTDevices;
@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         btnSend =  (Button) findViewById(R.id.btnSend);
         btnSend2 =  (Button) findViewById(R.id.btnSend2);
         btnStartConnection =  (Button) findViewById(R.id.btnStartConnection);
-        btnScanMode = (Button) findViewById(R.id.btnScanMode);
         btnSearchMode = (Button) findViewById(R.id.btnSearchMode);
         etSend = (EditText) findViewById(R.id.editText);
         incomingMessage = (TextView) findViewById(R.id.incomingMessage);
@@ -109,13 +108,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
-        btnScanMode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, ScanModeActivity.class);
-                startActivity(intent);
-            }
-        });
 
         btnSearchMode.setOnClickListener(new View.OnClickListener() {
             @Override
