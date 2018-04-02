@@ -11,13 +11,6 @@
         android:layout_height="wrap_content" />
 
     <Button
-        android:text="btnDiscoverable_on_off"
-        android:id="@+id/btnDiscoverable_on_off"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="btnEnableDisable_Discoverable"/>
-
-    <Button
         android:text="Discover"
         android:id="@+id/btnFindUnpairdDevices"
         android:layout_width="wrap_content"

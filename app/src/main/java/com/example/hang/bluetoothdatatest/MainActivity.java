@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private static final UUID MY_UUID_INSECURE = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     BluetoothAdapter mBluetoothAdapter;
     BluetoothConnectionService mBluetoothConnection;
-    Button btnDiscoverable;
     Button btnStartConnection;
     Button btnSend2;
     TextView incomingMessage;
@@ -53,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         adapter = new DeviceAdapter(this, mBTDevices);
 
         Button btnONOFF = (Button) findViewById(R.id.btnONOFF);
-        btnDiscoverable = (Button) findViewById(R.id.btnDiscoverable_on_off);
         btnSend2 =  (Button) findViewById(R.id.btnSend2);
         btnStartConnection =  (Button) findViewById(R.id.btnStartConnection);
         btnSearchMode = (Button) findViewById(R.id.btnSearchMode);
