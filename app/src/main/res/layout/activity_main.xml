@@ -36,20 +36,9 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"/>
 
-    <EditText
-        android:id="@+id/editText"
-        android:hint="Enter text here"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content" />
-    <Button
-        android:id="@+id/btnSend"
-        android:text="Send"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
     <Button
         android:id="@+id/btnSend2"
-        android:text="Send 2"
+        android:text="Send Command"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
@@ -58,11 +47,10 @@
         android:id="@+id/incomingMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-    
+
     <Button
         android:text="Go to SearchMode"
         android:id="@+id/btnSearchMode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-
 </LinearLayout>

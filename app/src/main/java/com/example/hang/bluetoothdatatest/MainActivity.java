@@ -33,11 +33,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     BluetoothAdapter mBluetoothAdapter;
     BluetoothConnectionService mBluetoothConnection;
     Button btnDiscoverable;
-    Button btnSend;
     Button btnStartConnection;
     Button btnSend2;
     TextView incomingMessage;
-    EditText etSend;
+
 
     Button btnSearchMode;
 
@@ -55,11 +54,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         Button btnONOFF = (Button) findViewById(R.id.btnONOFF);
         btnDiscoverable = (Button) findViewById(R.id.btnDiscoverable_on_off);
-        btnSend =  (Button) findViewById(R.id.btnSend);
         btnSend2 =  (Button) findViewById(R.id.btnSend2);
         btnStartConnection =  (Button) findViewById(R.id.btnStartConnection);
         btnSearchMode = (Button) findViewById(R.id.btnSearchMode);
-        etSend = (EditText) findViewById(R.id.editText);
         incomingMessage = (TextView) findViewById(R.id.incomingMessage);
         messages = new StringBuilder();
 
@@ -88,23 +85,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
-        btnSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                byte[] bytes = etSend.getText().toString().getBytes(Charset.defaultCharset());
-                mBluetoothConnection.write(bytes);
-                etSend.setText("");
-            //    messages = new StringBuilder();
-            }
-        });
 
         btnSend2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 byte[] bytes = "2".getBytes(Charset.defaultCharset());
                 mBluetoothConnection.write(bytes);
-                etSend.setText("");
-            //    messages = new StringBuilder();
             }
         });
 
