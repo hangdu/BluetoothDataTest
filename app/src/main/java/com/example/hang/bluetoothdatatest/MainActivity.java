@@ -16,7 +16,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -96,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         btnSearchMode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, SearchModeActiviry.class);
+                Intent intent = new Intent(MainActivity.this, SearchModeActivity.class);
                 startActivity(intent);
             }
         });

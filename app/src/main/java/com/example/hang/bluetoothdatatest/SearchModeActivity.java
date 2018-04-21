@@ -26,7 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class SearchModeActiviry extends AppCompatActivity {
+public class SearchModeActivity extends AppCompatActivity {
     BluetoothConnectionService bluetoothConnectionService;
     final static String TAG= "SearchModeActiviry";
     private Button btn_addLabel;
@@ -101,6 +101,7 @@ public class SearchModeActiviry extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_mode_activiry);
+        this.setTitle("SearchModeActivity");
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("incomingMessage"));
         handler = new Handler(Looper.getMainLooper()) {
             @Override
@@ -146,7 +147,7 @@ public class SearchModeActiviry extends AppCompatActivity {
                 curLabel = et_addLabel.getText().toString();
                 et_addLabel.setText("");
                 if (labels.contains(curLabel)) {
-                    Toast.makeText(SearchModeActiviry.this, "This label is already included!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SearchModeActivity.this, "This label is already included!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
