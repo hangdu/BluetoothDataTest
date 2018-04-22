@@ -20,6 +20,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.net.Inet4Address;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     BluetoothConnectionService mBluetoothConnection;
     Button btnStartConnection;
     Button btnSend2;
+    Button btn_OneDimension;
     TextView incomingMessage;
 
 
@@ -54,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         btnSend2 =  (Button) findViewById(R.id.btnSend2);
         btnStartConnection =  (Button) findViewById(R.id.btnStartConnection);
         btnSearchMode = (Button) findViewById(R.id.btnSearchMode);
+        btn_OneDimension = (Button) findViewById(R.id.btn_OneDimension);
         incomingMessage = (TextView) findViewById(R.id.incomingMessage);
         messages = new StringBuilder();
 
@@ -96,6 +99,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, SearchModeActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btn_OneDimension.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, OneDimensionSampleActivity.class);
                 startActivity(intent);
             }
         });
