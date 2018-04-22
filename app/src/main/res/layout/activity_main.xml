@@ -42,14 +42,14 @@
         android:layout_height="wrap_content" />
 
     <Button
-        android:text="Go to SearchMode"
-        android:id="@+id/btnSearchMode"
+        android:id="@+id/btn_OneDimension"
+        android:text="One Dimension Data Sample"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <Button
-        android:id="@+id/btn_OneDimension"
-        android:text="One Dimension Data Sampling"
+        android:text="Two Dimension/Small Range Sample"
+        android:id="@+id/btnSearchMode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 </LinearLayout>
