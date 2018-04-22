@@ -85,6 +85,7 @@ public class OneDimensionSampleActivity extends AppCompatActivity {
         btn_StartCollect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                strengthList.clear();
                 SendCommandHandler = scheduler.scheduleAtFixedRate(sendCommandRunnable, 0, 2, TimeUnit.SECONDS);
             }
         });

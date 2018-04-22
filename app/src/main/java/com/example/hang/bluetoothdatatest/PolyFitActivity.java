@@ -3,6 +3,7 @@ package com.example.hang.bluetoothdatatest;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.androidplot.xy.CatmullRomInterpolator;
 import com.androidplot.xy.LineAndPointFormatter;
@@ -19,6 +20,7 @@ import java.util.List;
 
 public class PolyFitActivity extends AppCompatActivity {
     private XYPlot plot;
+    private TextView tv_result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +28,7 @@ public class PolyFitActivity extends AppCompatActivity {
         setContentView(R.layout.activity_poly_fit);
 
         plot = (XYPlot) findViewById(R.id.plot);
+        tv_result = (TextView) findViewById(R.id.tv_result);
 
         Intent intent = getIntent();
         ArrayList<Double> list = (ArrayList<Double>)intent.getSerializableExtra("array");
@@ -88,6 +91,8 @@ public class PolyFitActivity extends AppCompatActivity {
         RSquared rSuqred2 = new RSquared(filtered, yTwoOrder_predicted, 3);
         double rsquared2 = rSuqred2.getRSquared();
         double adjustedR2 = rSuqred2.getAdjustedRSquared();
+
+        tv_result.setText("OneOrderFit Adjust_R2="+adrsquared+"\n"+"TwoOrderFit Adjust_R2="+adjustedR2);
     }
 
     Number[] getSeriesNumbers(double[] array) {

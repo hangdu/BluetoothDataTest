@@ -1,17 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ap="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
+   <TextView
+       android:id="@+id/tv_result"
+       android:text="hello world"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content" />
+
     <com.androidplot.xy.XYPlot
+        android:layout_below="@id/tv_result"
         style="@style/APDefacto.Dark"
         android:id="@+id/plot"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        ap:title="A Simple XY Plot"
+        ap:title="Fit Plot"
         ap:rangeTitle="range"
         ap:domainTitle="domain"
         ap:lineLabels="left|bottom"
         ap:lineLabelRotationBottom="-45"/>
-</LinearLayout>
+</RelativeLayout>
