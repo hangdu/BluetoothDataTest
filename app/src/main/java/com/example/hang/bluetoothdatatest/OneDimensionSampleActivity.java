@@ -68,7 +68,7 @@ public class OneDimensionSampleActivity extends AppCompatActivity {
         }
     };
     private ScheduledFuture<?> SendCommandHandler;
-    private List<Double> strengthList;
+    private ArrayList<Double> strengthList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +106,9 @@ public class OneDimensionSampleActivity extends AppCompatActivity {
         btn_Process.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(OneDimensionSampleActivity.this, PolyFitActivity.class);
+                intent.putExtra("array", strengthList);
+                startActivity(intent);
             }
         });
     }

@@ -24,7 +24,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".SearchModeActivity" />
-        <activity android:name=".OneDimensionSampleActivity"></activity>
+        <activity android:name=".OneDimensionSampleActivity" />
+        <activity android:name=".PolyFitActivity"></activity>
     </application>
 
 </manifest>
